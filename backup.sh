@@ -1,19 +1,15 @@
 #!/bin/bash -e
 
-# initialize variables
-verbose=0
-passphrase=""
-target=""
-
 # global configuration
 gpg_params="--batch --no-use-agent"
 gpg_encryption_params="--symmetric --cipher-algo AES256 --digest-algo SHA512 --s2k-mode 3 --s2k-digest-algo SHA512"
+conf=$(cat $1)
 
 # log info function
 function log_info {
   message=$1
   timestamp=$(date +'%Y-%m-%d %T')
-  if [ $verbose = 1 ]; then echo "[info] ${timestamp} - ${message}"; fi
+  echo "[info] ${timestamp} - ${message}"
 }
 
 # log err function
@@ -78,49 +74,41 @@ function cleanup {
   done
 }
 
-# parse arguments
-OPTIND=1
-OPTERR=0
-while getopts "h?vp:t:" opt; do
-  case "$opt" in
-    v) verbose=1 ;;
-    t) target=$OPTARG ;;
-    p) passphrase=$OPTARG ;;
-    \?) usage; exit 1 ;;
-  esac
-done
-shift $((OPTIND-1))
-[ "$1" = "--" ] && shift
-tasks="$1"
+# iterate over configuration file lines (conf pass)
+while read -r line; do
+  read -a parts <<< "${line}"
+  if [ "${parts[0]}" = "conf" ]; then
+    case "${parts[1]}" in
+      "target") target="${parts[2]}" ;;
+      "passphrase") passphrase="${parts[2]}" ;;
+      *)
+        log_error "unknown configuration key ${parts[1]}"
+        exit 1
+        ;;
+    esac
+  fi
+done <<< "${conf}"
 
-if [ -z $target ]; then usage; exit 1; fi
-if [ -z $tasks ]; then usage; exit 1; fi
-if [ ! -e $tasks ]; then log_error "tasks file ${tasks} does not exist"; exit 1; fi
-
-# prepare
+# check configuration
+if [ -z "${target}" ]; then log_error "You must configure the target"; exit 1; fi
+if [ ! -e "${target}" ]; then log_error "The target '${target}' does not exist"; exit 1; fi
 log_info "target ${target}"
-if [ ! -z $passphrase ]; then log_info 'passphrase ***'; fi
-mkdir -p "${target}"
 
-# iterate over backup tasks
-cat "${tasks}" | while read line; do
-  read -a task <<< "${line}"
-
-  case "${task[0]}" in
-    "folder")
-      backup_folder "${task[@]}"
-      ;;
-    "mysql")
-      backup_mysql "${task[@]}"
-      ;;
-    "#" | "")
-      ;;
-    *)
-      log_error "unknown backup task ${task[0]}"
-      exit 1
-      ;;
-  esac
-done
+# iterate over configuration file lines (execution pass)
+while read -r line; do
+  if [ ! -z "${line}" ] && [[ ! "${line}" =~ ^\s*#.*$ ]]; then
+    read -a parts <<< "${line}"
+    case "${parts[0]}" in
+      "folder") backup_folder "${parts[@]}" ;;
+      "mysql") backup_mysql "${parts[@]}" ;;
+      "conf") ;;
+      *)
+        log_error "unknown backup task ${parts[0]}"
+        exit 1
+        ;;
+    esac
+  fi
+done <<< "${conf}"
 
 # cleanup
 cleanup
