@@ -9,7 +9,7 @@ The format of each (non comment line) is:
 {strategy} {name} {argument1} {argument2} ...
 ~~~
 
-For example create the file 'backup-tasks.txt' with the content:
+For example create the file 'tasks.conf' with the content:
 
 ~~~
 # backups all log files
@@ -22,13 +22,13 @@ mysql wordpress-db wordpress_database wordpress_user SeCuRePaSsWoRd!
 Now run the backup script with:
 
 ~~~ bash
-$ ./backup.sh -v -t /path/to/backup/target backup-tasks.txt
+$ ./backup.sh -v -t /path/to/backup/target tasks.conf
 ~~~
 
 Optionally you can provide a password to encrypt the backup file with GPG:
 
 ~~~ bash
-$ ./backup.sh -v -t /path/to/backup/target -p PaSsPhRaSe backup-tasks.txt
+$ ./backup.sh -v -t /path/to/backup/target -p PaSsPhRaSe tasks.conf
 ~~~
 
 ## Strategies
