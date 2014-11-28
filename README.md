@@ -9,7 +9,7 @@ The format of each (non comment line) is:
 {strategy} {name} {argument1} {argument2} ...
 ~~~
 
-For example create a file 'tasks.conf' with the content (make sure you `chmod 600`) it to protected protect contained passwords:
+For example create a file 'backup.conf' with the content (make sure you `chmod 600`) it to protected protect contained passwords:
 
 ~~~
 ### configuration
@@ -29,7 +29,7 @@ mysql wordpress-db wordpress_database wordpress_user SeCuRePaSsWoRd!
 Now run the backup script with:
 
 ~~~ bash
-$ ./backup.sh tasks.conf
+$ ./backup.sh backup.conf
 ~~~
 
 ## Strategies
