@@ -1,5 +1,6 @@
 import sys
 import os
+import subprocess
 import time
 import datetime
 
@@ -17,3 +18,10 @@ def log_error(message):
 
 def ensure_directory(dir):
   if not os.path.exists(dir): os.makedirs(dir)
+
+def run(cmd):
+  subprocess.call(cmd)
+
+def run_shell(cmd):
+  p = subprocess.Popen(cmd, shell=True)
+  p.communicate()
