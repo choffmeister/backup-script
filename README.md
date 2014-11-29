@@ -2,7 +2,7 @@
 
 ## Usage
 
-Create a configuration file called 'backup.yaml' (make sure you `chmod 600` to proteced potentially contained sensible data). For example your configuration could look like this:
+Create a configuration file called `backup.yaml` (make sure you `chmod 600` it to proteced sensible data). For example your configuration could look like this:
 
 ~~~ yaml
 # put all backup files into /var/backup
@@ -24,7 +24,7 @@ backups:
   logs:
     type: directory
     path: /var/log
-  # backup the mysal database foobar_database
+  # backup the mysql database foobar_database
   foobar:
     type: mysql
     database: foobar_database
@@ -35,17 +35,17 @@ backups:
 Now run the backup script like so:
 
 ~~~ bash
-$ /path/to/main.py /path/to/backup.yml
+$ /path/to/main.py /path/to/backup.yaml
 ~~~
 
 To run the script on a regular basis (for example once a week on sunday, 3 a.m.) add one of the following lines as cron job (make sure that the cron job user has access to the directories):
 
 ~~~
 # this way the cron job user gets an email every time the job has been run
-0 3 * * 0 /path/to/main.py /path/to/backup.yml
+0 3 * * 0 /path/to/main.py /path/to/backup.yaml
 
 # this way the cron job user only gets an email if something has been written to the stderr
-0 3 * * 0 /path/to/main.py /path/to/backup.yml 1>/dev/null
+0 3 * * 0 /path/to/main.py /path/to/backup.yaml 1>/dev/null
 ~~~
 
 ## Backup strategies
