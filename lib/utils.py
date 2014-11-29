@@ -15,5 +15,5 @@ def log_error(message):
   now = timestamp('%Y-%m-%d %H:%M:%S')
   print >> sys.stderr, '[error] %s - %s' % (now, message)
 
-def ensure_directroy(dir):
+def ensure_directory(dir):
   if not os.path.exists(dir): os.makedirs(dir)
