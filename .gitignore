@@ -1,1 +1,5 @@
-backup.conf
+# Configration file
+backup.yaml
+
+# Python stuff
+*.pyc
