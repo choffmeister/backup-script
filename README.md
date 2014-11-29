@@ -16,7 +16,7 @@ For example create a file 'backup.conf' with the content (make sure you `chmod 6
 # where to put the backup files
 conf target /tmp/backup
 # the passphase to encrypt the backup files with
-# uncomment this line to deactivate encryption
+# comment out the next line to disable encryption
 conf passphrase applepie
 
 ### tasks
