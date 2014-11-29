@@ -28,7 +28,7 @@ def run_shell(cmd):
 
 def list_files(dir):
   result = []
-  for root, subFolders, files in os.walk(dir):
+  for root, subFolders, files in os.walk(dir, followlinks=False):
     for file in files:
         result.append(os.path.join(root, file))
   return result
