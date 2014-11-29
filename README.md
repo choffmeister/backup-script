@@ -25,7 +25,17 @@ backups:
 Now run the backup script like so:
 
 ~~~ bash
-$ ./backup.py /path/to/backup.yml
+$ /path/to/backup.py /path/to/backup.yml
+~~~
+
+To run the script on a regular basis (for example once a week on sunday, 3 a.m.) add one of the following lines as cron job (make sure that the cron job user has access to the directories):
+
+~~~
+# this way the cron job user gets an email every time the job has been run
+0 3 * * 0 /path/to/backup.py /path/to/backup.yml
+
+# this way the cron job user only gets an email if something has been written to the stderr
+0 3 * * 0 /path/to/backup.py /path/to/backup.yml 1>/dev/null
 ~~~
 
 ## Strategies
