@@ -22,10 +22,10 @@ backups:
     password: wordpress_database
 ~~~
 
-Now run the backup script from within the directory where `backup.yaml` is located:
+Now run the backup script like so:
 
 ~~~ bash
-$ ./backup.py
+$ ./backup.py /path/to/backup.yml
 ~~~
 
 ## Strategies
