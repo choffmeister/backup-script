@@ -38,7 +38,17 @@ To run the script on a regular basis (for example once a week on sunday, 3 a.m.)
 0 3 * * 0 /path/to/backup.py /path/to/backup.yml 1>/dev/null
 ~~~
 
-## Strategies
+## Backup strategies
 
 * `directory` Backups a directory into a compressed TAR ball.
 * `mysql` Backups a MySQL database into a compressed SQL script.
+
+## Third party Python packages
+
+You need the Python package [PyYAML](http://pyyaml.org/wiki/PyYAML). If you are using a recent version of [Ubuntu](http://www.ubuntu.com) you can install it by executing:
+
+~~~ bash
+$ sudo apt-get update
+$ sudo apt-get install python-pip
+$ sudo pip install pyyaml
+~~~
