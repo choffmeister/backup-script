@@ -2,37 +2,33 @@
 
 ## Usage
 
-Create a textfile containing one line for each backup task you have.
-The format of each (non comment line) is:
+Create a configuration file called 'backup.yaml' (make sure you `chmod 600` to proteced potentially contained sensible data). For example your configuration could look like this:
 
-~~~
-{strategy} {name} {argument1} {argument2} ...
-~~~
+~~~ yaml
+target: /var/backup
 
-For example create a file 'backup.conf' with the content (make sure you `chmod 600`) it to protected protect contained passwords:
+encryption:
+  enabled: false
+  passphrase:
 
-~~~
-### configuration
-# where to put the backup files
-conf target /tmp/backup
-# the passphase to encrypt the backup files with
-# comment out the next line to disable encryption
-conf passphrase applepie
-
-### tasks
-# backups all log files
-folder logs /var/log
-# backups the wordpress database
-mysql wordpress-db wordpress_database wordpress_user SeCuRePaSsWoRd!
+backups:
+  logs:
+    type: directory
+    path: /var/logs
+  wordpress/database:
+    type: mysql
+    database: wordpress_database
+    user: wordpress_user
+    password: wordpress_database
 ~~~
 
-Now run the backup script with:
+Now run the backup script from within the directory where `backup.yaml` is located:
 
 ~~~ bash
-$ ./backup.sh backup.conf
+$ ./backup.py
 ~~~
 
 ## Strategies
 
-* `folder` Backups a folder into a compressed TAR ball.
+* `directory` Backups a directory into a compressed TAR ball.
 * `mysql` Backups a MySQL database into a compressed SQL script.
