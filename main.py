@@ -16,4 +16,4 @@ else:
 with open(config_path, 'r') as f:
   config = yaml.load(f)
   backup(config)
-  cleanup(config)
+  if config['cleanup']['enabled'] == True: cleanup(config)

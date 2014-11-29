@@ -25,3 +25,10 @@ def run(cmd):
 def run_shell(cmd):
   p = subprocess.Popen(cmd, shell=True)
   p.communicate()
+
+def list_files(dir):
+  result = []
+  for root, subFolders, files in os.walk(dir):
+    for file in files:
+        result.append(os.path.join(root, file))
+  return result

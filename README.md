@@ -5,21 +5,30 @@
 Create a configuration file called 'backup.yaml' (make sure you `chmod 600` to proteced potentially contained sensible data). For example your configuration could look like this:
 
 ~~~ yaml
+# put all backup files into /var/backup
 target: /var/backup
 
+# do not encrypt the resulting backup files
 encryption:
   enabled: false
   passphrase:
 
+# clean up all backup files older than 30 days
+cleanup:
+  enabled: true
+  max-age: 2592000
+
 backups:
+  # backup the directory /var/logs
   logs:
     type: directory
-    path: /var/logs
-  wordpress/database:
+    path: /var/log
+  # backup the mysal database foobar_database
+  foobar:
     type: mysql
-    database: wordpress_database
-    user: wordpress_user
-    password: wordpress_database
+    database: foobar_database
+    user: foobar_user
+    password: foobar_password
 ~~~
 
 Now run the backup script like so:
