@@ -19,11 +19,6 @@ function log_error {
   echo "[error] ${timestamp} - ${message}" >&2
 }
 
-# print usage
-function usage {
-  echo "usage: $0 [-v] -t /path/to/backup/target [-p encryption-passphrase] /path/to/tasks/file" >&2
-}
-
 # backup a folder
 function backup_folder {
   output=$1
