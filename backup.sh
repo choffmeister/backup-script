@@ -26,39 +26,37 @@ function usage {
 
 # backup a folder
 function backup_folder {
-  name=$2
-  folder=$3
-  output="${target}/${name}/${name}-$(date +'%Y-%m-%d_%H-%M-%S').tar.gz"
+  output=$1
+  folder=$2
   mkdir -p "$(dirname ${output})"
 
   if [ -z $passphrase ]; then
     log_info "backup folder ${folder}"
-    log_info "create ${output}"
-    tar -cz -C "${folder}" . > "${output}"
+    log_info "create ${output}.tar.gz"
+    tar -cz -C "${folder}" . > "${output}.tar.gz"
   else
     log_info "backup folder ${folder} (encrypted)"
-    log_info "create ${output}.gpg"
-    tar -cz -C "${folder}" . | gpg ${gpg_params} ${gpg_encryption_params} --passphrase "${passphrase}" > "${output}.gpg"
+    log_info "create ${output}.tar.gz.gpg"
+    tar -cz -C "${folder}" . | gpg ${gpg_params} ${gpg_encryption_params} --passphrase "${passphrase}" > "${output}.tar.gz.gpg"
   fi
 }
 
 # backup a mysql database
 function backup_mysql {
-  name=$2
-  dbname=$3
-  dbuser=$4
-  dbpass=$5
-  output="${target}/${name}/${name}-$(date +'%Y-%m-%d_%H-%M-%S').sql.gz"
+  output=$1
+  dbname=$2
+  dbuser=$3
+  dbpass=$4
   mkdir -p "$(dirname ${output})"
 
   if [ -z $passphrase ]; then
     log_info "backup mysql database ${dbname}"
-    log_info "create ${output}"
-    mysqldump "-u${dbuser}" "-p${dbpass}" "${dbname}" | gzip -9 > "${output}"
+    log_info "create ${output}.sql.gz"
+    mysqldump "-u${dbuser}" "-p${dbpass}" "${dbname}" | gzip -9 > "${output}.sql.gz"
   else
     log_info "backup mysql database ${dbname} (encrypted)"
-    log_info "create ${output}.gpg"
-    mysqldump "-u${dbuser}" "-p${dbpass}" "${dbname}" | gzip -9 | gpg ${gpg_params} ${gpg_encryption_params} --passphrase "${passphrase}" > "${output}.gpg"
+    log_info "create ${output}.sql.gz.gpg"
+    mysqldump "-u${dbuser}" "-p${dbpass}" "${dbname}" | gzip -9 | gpg ${gpg_params} ${gpg_encryption_params} --passphrase "${passphrase}" > "${output}.sql.gz.gpg"
   fi
 }
 
@@ -98,9 +96,14 @@ log_info "target ${target}"
 while read -r line; do
   if [ ! -z "${line}" ] && [[ ! "${line}" =~ ^\s*#.*$ ]]; then
     read -a parts <<< "${line}"
+    mode="${parts[0]}"
+    name="${parts[1]}"
+    name_undashed=$(echo "${name}" | sed 's/[^a-zA-Z0-9]/\-/g')
+    output_path="${target}/${name}/${name_undashed}-$(date +'%Y-%m-%d_%H-%M-%S')"
+
     case "${parts[0]}" in
-      "folder") backup_folder "${parts[@]}" ;;
-      "mysql") backup_mysql "${parts[@]}" ;;
+      "folder") backup_folder "${output_path}" "${parts[2]}" ;;
+      "mysql") backup_mysql "${output_path}" "${parts[2]}" "${parts[3]}" "${parts[4]}" ;;
       "conf") ;;
       *)
         log_error "unknown backup task ${parts[0]}"
