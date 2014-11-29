@@ -23,5 +23,3 @@ def run(config):
       utils.log_error('unknown backup type %s' % backup_type)
 
     utils.log_info('finished backup %s' % backup_name)
-
-  return 0
