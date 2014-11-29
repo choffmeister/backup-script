@@ -9,6 +9,7 @@ Create a configuration file called 'backup.yaml' (make sure you `chmod 600` to p
 target: /var/backup
 
 # do not encrypt the resulting backup files
+# CAUTION! encryption is not yet implemented
 encryption:
   enabled: false
   passphrase:
